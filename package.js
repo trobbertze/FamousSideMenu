@@ -7,6 +7,7 @@ Package.on_use(function (api, where) {
 
     api.add_files('src/sideView.css', 'client');
     api.add_files('src/headerView.js', 'client');
+    api.add_files('src/menuButton.js', 'client');
     api.add_files('src/sideView.js', 'client');
     api.add_files('src/sideMenu.js', 'client');
 

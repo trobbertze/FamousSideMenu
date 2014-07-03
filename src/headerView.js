@@ -14,7 +14,8 @@ HeaderView = function(kwargs) {
             content: "&#xf0c9;",
             classes: ["headerIcon"],
             properties: {
-                lineHeight: "50px"
+                lineHeight: "50px",
+                color: kwargs.color
             }
         });
 
@@ -26,10 +27,11 @@ HeaderView = function(kwargs) {
             size: [undefined, 50],
             content: kwargs.title,
             properties: {
+                color: kwargs.color,
                 textAlign: 'center',
                 fontSize: '20px',
                 lineHeight: '50px',
-                backgroundColor: 'black'
+                backgroundColor: kwargs.backgroundColor
             }
         });
 
