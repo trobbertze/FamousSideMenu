@@ -77,7 +77,7 @@ MenuButton = function(kwargs) {
         backgroundColor: this.selectedBackgroundColor
       }
     );
-    this.action.flipOpen();
+    //this.action.flipOpen();
     this._eventOutput.emit('select', this.action);
   };
   // ---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ MenuButton = function(kwargs) {
         backgroundColor: this.backgroundColor
       }
     );
-    this.action.flipClose();
+    //this.action.flipClose();
     this._eventOutput.emit('unSelect', this.action);
   };
 

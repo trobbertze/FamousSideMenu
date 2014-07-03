@@ -55,18 +55,19 @@ SideView = function(kwargs) {
   }
 
   // ---------------------------------------------------------------------------
-  _SideView.prototype.flipIn = function() {
+  _SideView.prototype.flipIn = function(cb) {
     this.hinge.setTransform(
       Transform.thenMove(Transform.rotateY(-Math.PI/2.2),
       [-this.width, 0, 0]),
-      { duration: 500, curve: 'easeOut' }
+      { duration: 500, curve: 'easeOut' },
+      cb
     );
   };
 
   // ---------------------------------------------------------------------------
   _SideView.prototype.selectButton = function(button, action) {
     this._eventOutput.emit('select', action);
-    
+
     _.each(this.buttons, function(_button){
       if(_button.id !== button.id) {
         _button.unSelect();
@@ -79,12 +80,6 @@ SideView = function(kwargs) {
     for(var i = 0; i < kwargs.buttons.length; i++) {
       var button = new MenuButton(_.extend({id: i}, kwargs.buttons[i]));
       button.on("select", this.selectButton.bind(this, button));
-      kwargs.mainNode.add(
-        new Modifier(
-          {
-            transform: Transform.translate(0,0,5)}
-          )
-      ).add(kwargs.buttons[i]['action']);
       this.buttons.push(button);
     }
   };

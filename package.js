@@ -4,6 +4,7 @@ Package.describe({
 
 Package.on_use(function (api, where) {
     api.use(['famono'], 'client');
+    api.use(['baseView'], 'client');
 
     api.add_files('src/sideView.css', 'client');
     api.add_files('src/headerView.js', 'client');

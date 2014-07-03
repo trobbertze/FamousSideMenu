@@ -1,13 +1,15 @@
 SideMenu = function(kwargs){
   // Famous Modules
   require("famous/core/famous");
-  var View       = require('famous/core/View');
-  var RenderNode   = require('famous/core/RenderNode')
-  var Transform    = require('famous/core/Transform');
-  var Modifier     = require('famous/core/Modifier');
+  var View          = require('famous/core/View');
+  var RenderNode    = require('famous/core/RenderNode')
+  var Transform     = require('famous/core/Transform');
+  var Modifier      = require('famous/core/Modifier');
   var Transitionable   = require('famous/transitions/Transitionable');
   var HeaderFooterLayout = require('famous.views/HeaderFooterLayout');
-  var Utility    = require('famous/utilities/Utility');
+  var Lightbox      = require('famous.views/Lightbox');
+  var Easing        = require('famous/transitions/Easing');
+  var Utility       = require('famous/utilities/Utility');
 
   require('famous/inputs/FastClick');
 
@@ -30,21 +32,24 @@ SideMenu = function(kwargs){
 
     this.mainNode = new RenderNode();
 
+    this.lightbox = new Lightbox({
+      inOpacity: 1,
+      outOpacity: 1,
+      inTransform: Transform.translate(320,0, 0),
+      outTransform: Transform.translate(-320, 0, 1),
+      inTransition: { duration: 400, curve: Easing.outBack },
+      outTransition: { duration: 400, curve: Easing.easeOut }
+    });
+
     // Create the SideView with category buttons for filtering tasks
-    this.sideView = new SideView(
-      _.extend(
-      {
-        mainNode: this.mainNode
-      },
-      kwargs.menu
-      )
-    );
+    this.sideView = new SideView(kwargs.menu);
 
     this.sideView.on('select', this.selectItem.bind(this));
 
     // Tie the sideView and the taskList together
 
     this.mainNode.add(this.sideView);
+    this.mainNode.add(this.lightbox);
 
     // Layout for specifically sized header and variable content
     this.layout = new HeaderFooterLayout({
@@ -95,14 +100,17 @@ SideMenu = function(kwargs){
     this.sideView.open = true;
   };
   // ---------------------------------------------------------------------------
-  _SideMenu.prototype.close = function() {
+  _SideMenu.prototype.close = function(cb) {
     this.mainTransitionable.set(0, { duration: 500, curve: 'easeOut' });
-    this.sideView.flipIn();
+    this.sideView.flipIn(cb);
     this.sideView.open = false;
   };
   // ---------------------------------------------------------------------------
   _SideMenu.prototype.selectItem = function(action) {
-    this.close();
+    this.close(function(){
+        this.lightbox.show(action);
+    }.bind(this));
+
     this._eventOutput.emit('select', action);
   };
   // ---------------------------------------------------------------------------

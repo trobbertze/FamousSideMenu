@@ -6,6 +6,9 @@
     "version": "0.0.1",
     "git": "",
     "packages": {
-        "famono": {}
+        "famono": {},
+        "baseView": {
+          "path": "/Users/theorobbertze/Workspace/packages/baseView"
+        }
     }
 }
