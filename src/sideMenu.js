@@ -34,7 +34,7 @@ SideMenu = function(kwargs){
 
     this.lightbox = new Lightbox({
       inOpacity: 1,
-      outOpacity: 1,
+      outOpacity: 0,
       inTransform: Transform.translate(320,0, 0),
       outTransform: Transform.translate(-320, 0, 1),
       inTransition: { duration: 400, curve: Easing.outBack },
