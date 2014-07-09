@@ -1,8 +1,8 @@
 SideView = function(kwargs) {
-  var Surface  = require('famous/core/Surface');
+  var Surface    = require('famous/core/Surface');
   var Modifier   = require('famous/core/Modifier');
   var Transform  = require('famous/core/Transform');
-  var View     = require('famous/core/View');
+  var View       = require('famous/core/View');
   var GridLayout = require('famous.views/GridLayout');
 
   // ---------------------------------------------------------------------------
@@ -52,8 +52,7 @@ SideView = function(kwargs) {
       Transform.translate(-this.width, 0, 0),
       { duration: 500, curve: 'easeOut' }
     );
-  }
-
+  };
   // ---------------------------------------------------------------------------
   _SideView.prototype.flipIn = function(cb) {
     this.hinge.setTransform(
@@ -73,8 +72,7 @@ SideView = function(kwargs) {
         _button.unSelect();
       }
     }, this);
-  }
-
+  };
   // ---------------------------------------------------------------------------
   _SideView.prototype._createButtons = function(kwargs) {
     for(var i = 0; i < kwargs.buttons.length; i++) {
@@ -85,4 +83,4 @@ SideView = function(kwargs) {
   };
 
   return new _SideView(kwargs);
-}
+};

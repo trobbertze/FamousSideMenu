@@ -2,20 +2,23 @@ HeaderView = function(kwargs) {
     // Famous Modules
     var Surface   = require('famous/core/Surface');
     var Modifier  = require('famous/core/Modifier');
+    var StateModifier = require('famous/modifiers/StateModifier');
+    var Easing    = require('famous/transitions/Easing');
     var Transform = require('famous/core/Transform');
     var View      = require('famous/core/View');
     var Utility   = require('famous/utilities/Utility');
 
     function _HeaderView(kwargs) {
         View.apply(this, arguments);
- 
+
         this.hamburger = new Surface({
             size: [true, 50],
             content: "&#xf0c9;",
             classes: ["headerIcon"],
             properties: {
                 lineHeight: "50px",
-                color: kwargs.color
+                color: kwargs.color,
+                zIndex: 51,
             }
         });
 
@@ -31,9 +34,23 @@ HeaderView = function(kwargs) {
                 textAlign: 'center',
                 fontSize: '20px',
                 lineHeight: '50px',
+                zIndex: 50,
                 backgroundColor: kwargs.backgroundColor
             }
         });
+
+        var addButton = new Surface({
+    			size: [true, 50],
+    			content: "&#xf055;",
+    			classes: ["headerIcon"],
+    			properties: {
+    				lineHeight: "50px",
+            color: kwargs.color,
+            zIndex: 51,
+    			}
+    		});
+
+        this.addButtonAction = function() {};
 
         this.test = new View();
         this.test._add(new Modifier({
@@ -45,11 +62,47 @@ HeaderView = function(kwargs) {
             origin: [0.5, 0]
         })).add(this.title);
 
-        this._add(Utility.transformInFront).add(this.test);
-    };
+        this.addButtonModifier = new StateModifier({
+          transform: Transform.translate(-20, 0, 0),
+          origin: [1, 0],
+          opacity: 0
+        });
 
+        addButton.on("click", this.onAddButtonClicked.bind(this));
+
+        this.test.add(this.addButtonModifier).add(addButton);
+
+        this._add(Utility.transformInFront).add(this.test);
+    }
+    // ---------------------------------------------------------------------------
     _HeaderView.prototype = Object.create(View.prototype);
     _HeaderView.prototype.constructor = _HeaderView;
+    // ---------------------------------------------------------------------------
+    _HeaderView.prototype.showAddButton = function(action){
+      this.addButtonAction = action;
+      this.addButtonModifier.setOpacity(
+        1,
+        {
+          period: 400,
+          curve:Easing.inOutQuad
+        }
+      );
+    };
+    // ---------------------------------------------------------------------------
+    _HeaderView.prototype.hideAddButton = function(){
+      this.addButtonAction = function() {};
+      this.addButtonModifier.setOpacity(
+        0,
+        {
+          period: 400,
+          curve:Easing.inOutQuad
+        }
+      );
+    };
+    // ---------------------------------------------------------------------------
+    _HeaderView.prototype.onAddButtonClicked = function() {
+      this.addButtonAction();
+    };
 
     return new _HeaderView(kwargs);
 };

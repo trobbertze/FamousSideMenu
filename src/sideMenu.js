@@ -1,8 +1,8 @@
-SideMenu = function(kwargs){
+SideMenu = function(options){
   // Famous Modules
   require("famous/core/famous");
   var View          = require('famous/core/View');
-  var RenderNode    = require('famous/core/RenderNode')
+  var RenderNode    = require('famous/core/RenderNode');
   var Transform     = require('famous/core/Transform');
   var Modifier      = require('famous/core/Modifier');
   var Transitionable   = require('famous/transitions/Transitionable');
@@ -14,10 +14,10 @@ SideMenu = function(kwargs){
   require('famous/inputs/FastClick');
 
   // ---------------------------------------------------------------------------
-  function _SideMenu(kwargs) {
+  function _SideMenu(options) {
     View.apply(this);
 
-    kwargs = setDefaults(kwargs);
+    options = setDefaults(options);
 
     // Create the mainTransforms for shifting the entire view over on menu open
     this.mainTransform = new Modifier({
@@ -42,7 +42,7 @@ SideMenu = function(kwargs){
     });
 
     // Create the SideView with category buttons for filtering tasks
-    this.sideView = new SideView(kwargs.menu);
+    this.sideView = new SideView(options.menu);
 
     this.sideView.on('select', this.selectItem.bind(this));
 
@@ -59,9 +59,9 @@ SideMenu = function(kwargs){
     });
 
     // Create the HeaderView
-    this.headerView = new HeaderView(kwargs.header);
+    this.headerView = new HeaderView(options.header);
     this.headerView.pipe(this._eventInput);
-    this._eventInput.on('menuToggle', this.toggle.bind(this))
+    this._eventInput.on('menuToggle', this.toggle.bind(this));
 
     // Place the HeaderView and mainNode (containing the tasks and sidebar
     // inside of the header-footer-layout
@@ -74,7 +74,7 @@ SideMenu = function(kwargs){
     // Attach the main transform and the comboNode to the renderTree
     this._add(this.mainTransform).add(this.comboNode);
 
-  };
+  }
   // ---------------------------------------------------------------------------
   _SideMenu.prototype = Object.create(View.prototype);
   _SideMenu.prototype.constructor = _SideMenu;
@@ -90,7 +90,7 @@ SideMenu = function(kwargs){
   // ---------------------------------------------------------------------------
   _SideMenu.prototype.open = function() {
     this.mainTransitionable.set(
-      kwargs.menu.width,
+      options.menu.width,
       {
       duration: 500,
       curve: 'easeOut'
@@ -109,41 +109,48 @@ SideMenu = function(kwargs){
   _SideMenu.prototype.selectItem = function(action) {
     this.close(function(){
         this.lightbox.show(action);
+        if (action.addItem) {
+          this.headerView.showAddButton(action.addItem.bind(action));
+        }
+        else {
+          this.headerView.hideAddButton();
+        }
+
     }.bind(this));
 
     this._eventOutput.emit('select', action);
   };
   // ---------------------------------------------------------------------------
-  var setDefaults = function(kwargs) {
+  var setDefaults = function(options) {
 
-  if(!_.has(kwargs, "header")) {
-    kwargs.header = {};
-  }
+    if(!_.has(options, "header")) {
+      options.header = {};
+    }
 
-  var header = kwargs.header;
-  if(!_.has(header, "title")) {
-    header.title = "Please set the header title";
-  }
-  if(!_.has(header, "color")) {
-    header.color = "#ffffff";
-  }
-  if(!_.has(header, "backgroundColor")) {
-    header.backgroundColor = "#000";
-  }
+    var header = options.header;
+    if(!_.has(header, "title")) {
+      header.title = "Please set the header title";
+    }
+    if(!_.has(header, "color")) {
+      header.color = "#ffffff";
+    }
+    if(!_.has(header, "backgroundColor")) {
+      header.backgroundColor = "#000";
+    }
 
-  if(!_.has(kwargs, "menu")) {
-    kwargs.header = {};
-  }
+    if(!_.has(options, "menu")) {
+      options.header = {};
+    }
 
-  var menu = kwargs.menu;
-  if(!_.has(menu, "buttons")) {
-    menu.buttons = [];
-  }
-  if(!_.has(menu, "width")) {
-    menu.width = 100;
-  }
-  return kwargs;
-  }
+    var menu = options.menu;
+    if(!_.has(menu, "buttons")) {
+      menu.buttons = [];
+    }
+    if(!_.has(menu, "width")) {
+      menu.width = 100;
+    }
+    return options;
+  };
 
-  return new _SideMenu(kwargs);
+  return new _SideMenu(options);
 };
