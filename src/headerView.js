@@ -54,16 +54,17 @@ HeaderView = function(kwargs) {
 
         this.test = new View();
         this.test._add(new Modifier({
-            transform: Transform.translate(15, 0, 0),
+            transform: Transform.translate(15, 0, 5),
             origin: [0, 0]
         })).add(this.hamburger);
 
         this.test._add(new Modifier({
-            origin: [0.5, 0]
+            origin: [0.5, 0],
+            transform: Transform.translate(0, 0, 5),
         })).add(this.title);
 
         this.addButtonModifier = new StateModifier({
-          transform: Transform.translate(-20, 0, 0),
+          transform: Transform.translate(-20, 0, 5),
           origin: [1, 0],
           opacity: 0
         });
